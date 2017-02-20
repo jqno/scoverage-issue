@@ -1,28 +1,31 @@
-lazy val commonSettings = Seq(
-  organization := "com.example",
-  scalaVersion := "2.11.8",
-  libraryDependencies += "org.scalatest" %% "scalatest" % "3.0.1",
-  testOptions in Test := Seq(Tests.Filter(s => !s.endsWith("FunSpec"))),
-  testOptions in FunTest := Seq(Tests.Filter(s => s.endsWith("FunSpec")))
-)
+// scalastyle:off underscore.import multiple.string.literals field.name
 
-lazy val root = (project in file("."))
-  .configs(FunTest)
-  .dependsOn(sub)
-  .aggregate(sub)
-  .settings(commonSettings: _*)
-  .settings(inConfig(FunTest)(Defaults.testTasks): _*)
-  .settings(
-    name := "scoverage issue repro"
-  )
+import com.typesafe.sbt.web.SbtWeb.autoImport._
+import play.sbt.routes.RoutesKeys.routesGenerator
+import sbt.Keys.{javaOptions, libraryDependencies, testOptions}
+import sbt.{inConfig, _}
+import PlaySlick._
+import StaticAnalysis._
+import BuildSettings._
+import PlayAppSettings._
 
-lazy val sub = (project in file("subproject"))
-  .configs(FunTest)
-  .settings(commonSettings: _*)
-  .settings(inConfig(FunTest)(Defaults.testTasks): _*)
-  .settings(
-    name := "scoverage issue repro subproject"
-  )
 
-lazy val FunTest = config("fun") extend(Test)
+name := """my app"""
+version := "0.2"
+organization := "my organization"
+
+
+lazy val nextstep = (project in file("."))
+  .enablePlugins(PlayScala, SbtWeb)
+  .configs(FunTest, CucumberTest, Lint)
+  .settings(playAppSettings ++ projectBuildSettings)
+  .settings(inConfig(Lint) { playAppSettings ++ projectBuildSettings ++ lintSettings ++ wartRemoverAndPlaywartsSettings})
+
+initialize := {
+  val required = "1.8"
+  val current = sys.props("java.specification.version")
+  assert(current == required, s"Unsupported JDK: java.specification.version $current != $required")
+}
+
+staticAnalysisSettings
 

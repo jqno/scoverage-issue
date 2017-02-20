@@ -1,20 +1,30 @@
-# Eclipse files
-.metadata/
-.classpath
-.project
-.settings/
-target/
-.cache
+# play / sbt related
+logs
+target
+/RUNNING_PID
+CONTID
+coverage
+dist
+etc
 
-# IntelliJ files
-.idea/
-*.iml
+# IDEs
+/.idea
+/.idea_modules
+/.classpath
+/.project
+/.settings
+.history
+out.html
+skg-online.iml
 
-# Ensime files
-.ensime
-.ensime_cache
+# reactive platform related
+akka-diagnostics
 
-# OS specific files
+#javascript related
+node_modules
+/typings
+npm-debug.log
+
+# OS X related
 .DS_Store
-desktop.ini
-Thumbs.db
+
