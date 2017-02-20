@@ -3,7 +3,6 @@ logs
 target
 /RUNNING_PID
 CONTID
-coverage
 dist
 etc
 
